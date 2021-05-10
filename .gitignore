@@ -1,3 +1,9 @@
 target/
 .metals
 .vscode
+.idea
+.bsp
+.DS_Store
+.bloop
+project/metals*
+project/project/
