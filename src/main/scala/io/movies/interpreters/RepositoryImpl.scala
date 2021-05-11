@@ -16,19 +16,18 @@ object RepositoryImpl {
 
     override def addMovie(movie: Movie): F[Int] = {
       val insert: Update0 = sql"insert into movie (title, director, year) values (${movie.title}, ${movie.director}, ${movie.releaseDate})".update
-      //transactor.use((insert.run).transact[F])//.unsafeRunSync()
       logger.info(s"add movie $movie")
       insert.run.transact(transactor)
     }
 
-//    override def getMovies: F[List[RegisteredMovie]] = {
-//      val select = sql"select id, title, director, year from movie".query[RegisteredMovie].to[List]
-//      repository.use((select).transact[F])
-//    }
+    override def getMovies: F[List[RegisteredMovie]] = {
+      val select = sql"select id, title, director, year from movie".query[RegisteredMovie].to[List]
+      logger.info(s"get all movies with")
+      select.transact(transactor)
+    }
 
     override def getMovieById(id: Short): F[Option[RegisteredMovie]] = {
       val select = sql"select id, title, director, year from movie where id = $id".query[RegisteredMovie].option
-      //transactor.use((select).transact[F])
       logger.info(s"get movie with id: $id")
       logger.debug(s"get movie with id: $id")
       select.transact(transactor)

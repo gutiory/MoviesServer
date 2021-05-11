@@ -21,7 +21,7 @@ object Main extends IOApp {
       xa <- HikariTransactor.newHikariTransactor[IO](
         "org.postgresql.Driver", // driver classname
         //"jdbc:h2:mem:test;DB_CLOSE_DELAY=-1", // connect URL
-        "jdbc:postgresql://192.168.1.134:5432/MovieService",
+        "jdbc:postgresql://127.0.0.1:5432/MovieService",
         "postgres", // username
         "somePassword", // password
         ce, // await connection here

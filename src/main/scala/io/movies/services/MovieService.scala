@@ -5,6 +5,7 @@ import io.movies.model.{Movie, RegisteredMovie}
 
 trait MovieService[F[_]]{
   def getMovieById(id: Short): F[Option[RegisteredMovie]]
+  def getMovies: F[List[RegisteredMovie]]
   def addMovie(movie: Movie): F[Int]
 }
 
@@ -13,6 +14,10 @@ object MovieService{
     new MovieService[F] {
       override def getMovieById(id: Short): F[Option[RegisteredMovie]] = {
         repository.getMovieById(id)
+      }
+
+      override def getMovies: F[List[RegisteredMovie]] = {
+        repository.getMovies
       }
 
       override def addMovie(movie: Movie): F[Int] = {
