@@ -1,6 +1,6 @@
 package movies
 
-import cats.effect.{IO}
+import cats.effect.IO
 import org.scalatest.matchers.should.Matchers
 import io.movies.interpreters.RepositoryImpl
 import io.movies.model.{Movie, RegisteredMovie}

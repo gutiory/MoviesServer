@@ -26,6 +26,7 @@ lazy val root = (project in file("."))
       "org.typelevel" %% "log4cats-slf4j"     % "1.3.0",
       "com.typesafe.scala-logging" %% "scala-logging" % "3.9.3",
       "ch.qos.logback" % "logback-classic"    % "1.2.3",
+      "com.github.pureconfig" %% "pureconfig" % "0.15.0",
       "com.dimafeng" %% "testcontainers-scala-scalatest" % "0.39.3" % "test",
       "com.dimafeng" %% "testcontainers-scala-postgresql" % "0.39.3" % "test"
     )
