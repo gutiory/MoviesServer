@@ -27,9 +27,22 @@ lazy val root = (project in file("."))
       "com.typesafe.scala-logging" %% "scala-logging" % "3.9.3",
       "ch.qos.logback" % "logback-classic"    % "1.2.3",
       "com.github.pureconfig" %% "pureconfig" % "0.15.0",
+      "org.postgresql" % "postgresql" % "42.1.1",
       "com.dimafeng" %% "testcontainers-scala-scalatest" % "0.39.3" % "test",
       "com.dimafeng" %% "testcontainers-scala-postgresql" % "0.39.3" % "test"
     )
   )
 
 addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1")
+
+enablePlugins(FlywayPlugin)
+flywayDriver := "org.postgresql.Driver"
+flywayUrl := "jdbc:postgresql://127.0.0.1:5432/MovieService"
+flywayUser := "postgres"
+flywayPassword := "somePassword"
+flywayLocations += "filesystem:src/main/resources/db/migration"
+flywaySchemas := Seq("schema1", "schema2", "schema3")
+/*flywayPlaceholders := Map(
+  "keyABC" -> "valueXYZ",
+  "otherplaceholder" -> "value123"
+)*/
