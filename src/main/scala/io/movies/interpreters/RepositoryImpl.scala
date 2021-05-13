@@ -11,9 +11,11 @@ import org.typelevel.log4cats.SelfAwareStructuredLogger
 object RepositoryImpl {
 
   //no se pasa el recurso para que no se crea/destruya cada vez. no es viable en el caso de conexiones a BBDD
-  def doobie[F[_]](transactor: HikariTransactor[F])(implicit S: Sync[F], logger: SelfAwareStructuredLogger[F]) : F[Repository[F]] =
-    S.pure(new Repository[F] {
+  //def doobie[F[_]](transactor: Transactor[F])(implicit S: Sync[F], logger: SelfAwareStructuredLogger[F]) : F[Repository[F]] =
+  //  S.pure(new Repository[F] {
 
+  def doobie[F[_]](transactor: Transactor[F])(implicit S: Sync[F], logger: SelfAwareStructuredLogger[F]) : Repository[F] =
+    new Repository[F] {
     override def addMovie(movie: Movie): F[Int] = {
       val insert: Update0 = sql"insert into movie (title, director, year) values (${movie.title}, ${movie.director}, ${movie.releaseDate})".update
       logger.info(s"add movie $movie")
@@ -32,6 +34,19 @@ object RepositoryImpl {
       logger.debug(s"get movie with id: $id")
       select.transact(transactor)
     }
+
+    override def createMovieTable: F[Int] = {
+      val create: Update0 =
+        sql"""
+         CREATE TABLE movie ( id SERIAL, title VARCHAR NOT NULL,
+         director VARCHAR NOT NULL UNIQUE, year SMALLINT )
+        """.update
+      create.run.transact(transactor)
+    }
+
+    override def dropMovieTable: F[Int] = {
+      val drop: Update0 = sql"DROP TABLE IF EXISTS movie".update
+      drop.run.transact(transactor)
+    }
   }
-  )
 }

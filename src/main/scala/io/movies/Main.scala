@@ -46,8 +46,8 @@ object Main extends IOApp {
     transactor.use { xa =>
       for {
         implicit0(logger: SelfAwareStructuredLogger[IO]) <- Slf4jLogger.create[IO]
-        implicit0(repository: Repository[IO]) <- RepositoryImpl.doobie[IO](xa)
-        implicit0(ms: MovieService[IO]) = MovieService.impl[IO]
+        repository: Repository[IO] = RepositoryImpl.doobie[IO](xa)
+        implicit0(ms: MovieService[IO]) = MovieService.impl[IO](repository)
         api = new MovieServiceHttp4s[IO]
         _ <- api.stream(List())
       } yield ExitCode.Success
