@@ -36,6 +36,6 @@ object MovieService {
     }
 }
 
-  // Con otra tabla de directores, se podría primero acceder a esa por nombre, coger id y usar
-  // ese id en la tabla movie
+  // Use of this layer: with other table, directors for example, we could get the director id by name
+  // and use that id in the movie table instead of the name
 
