@@ -24,7 +24,7 @@ object RepositoryImpl {
       select.transact(transactor)
     }
 
-    override def getMovieById(id: Short): F[Option[RegisteredMovie]] = {
+    override def getMovieById(id: Int): F[Option[RegisteredMovie]] = {
       val select = sql"select id, title, director, year from movie where id = $id".query[RegisteredMovie].option
       logger.info(s"get movie with id: $id")
       logger.debug(s"get movie with id: $id")

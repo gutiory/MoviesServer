@@ -6,7 +6,7 @@ import java.time.Year
 
 case class Movie(title: String, director: String, releaseDate: Year)
 
-case class RegisteredMovie(id: Short, title: String, director: String, releaseDate: Year)
+case class RegisteredMovie(id: Int, title: String, director: String, releaseDate: Year)
 
 object RegisteredMovie {
   def toInt(y: Year): Int = y.getValue
