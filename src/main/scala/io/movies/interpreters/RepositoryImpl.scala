@@ -2,22 +2,18 @@ package io.movies.interpreters
 
 import cats.effect._
 import doobie._
-import doobie.hikari._
 import doobie.implicits._
 import io.movies.algebras.Repository
 import io.movies.model.{Movie, RegisteredMovie}
 import org.typelevel.log4cats.SelfAwareStructuredLogger
+import io.movies.model.RegisteredMovie._
 
 object RepositoryImpl {
-
-  //no se pasa el recurso para que no se crea/destruya cada vez. no es viable en el caso de conexiones a BBDD
-  //def doobie[F[_]](transactor: Transactor[F])(implicit S: Sync[F], logger: SelfAwareStructuredLogger[F]) : F[Repository[F]] =
-  //  S.pure(new Repository[F] {
 
   def doobie[F[_]](transactor: Transactor[F])(implicit S: Sync[F], logger: SelfAwareStructuredLogger[F]) : Repository[F] =
     new Repository[F] {
     override def addMovie(movie: Movie): F[Int] = {
-      val insert: Update0 = sql"insert into movie (title, director, year) values (${movie.title}, ${movie.director}, ${movie.releaseDate})".update
+      val insert: Update0 = sql"insert into movie (title, director, year) values (${movie.title}, ${movie.director}, ${movie.releaseDate.getValue})".update
       logger.info(s"add movie $movie")
       insert.run.transact(transactor)
     }

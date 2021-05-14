@@ -6,11 +6,12 @@ import io.movies.interpreters.RepositoryImpl
 import io.movies.model.{Movie, RegisteredMovie}
 import org.typelevel.log4cats.SelfAwareStructuredLogger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
+import java.time.Year
 
 class MovieSpec extends UsePostgreSQL with Matchers
 {
     implicit val logger: SelfAwareStructuredLogger[IO] = Slf4jLogger.getLogger[IO]
-    val movie: Movie = Movie("title1", "director1", 1981)
+    val movie: Movie = Movie("title1", "director1", Year.of(1981))
 
     "Database" should "be initialized" in {
       val repo = RepositoryImpl.doobie[IO](xa)
@@ -53,13 +54,13 @@ class MovieSpec extends UsePostgreSQL with Matchers
     "List of movies" should "be equal to expected" in {
       val repo = RepositoryImpl.doobie[IO](xa)
 
-      val movie2: Movie = Movie("title2", "director2", 1981)
+      val movie2: Movie = Movie("title2", "director2", Year.of(1981))
       repo.addMovie(movie2).unsafeRunSync() shouldEqual 1
 
-      val movie3: Movie = Movie("title3", "director3", 1900)
+      val movie3: Movie = Movie("title3", "director3", Year.of(1900))
       repo.addMovie(movie3).unsafeRunSync() shouldEqual 1
 
-      val movie4: Movie = Movie("title4", "director4", 1979)
+      val movie4: Movie = Movie("title4", "director4", Year.of(1979))
       repo.addMovie(movie4).unsafeRunSync() shouldEqual 1
 
       val expectedMovieList: List[Movie] = List(movie, movie2, movie3, movie4)
