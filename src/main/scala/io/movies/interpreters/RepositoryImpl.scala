@@ -13,10 +13,19 @@ object RepositoryImpl {
 
   def doobie[F[_]](transactor: Transactor[F])(implicit S: Sync[F], logger: SelfAwareStructuredLogger[F]) : Repository[F] =
     new Repository[F] {
-    override def addMovie(movie: Movie): F[Int] = {
-      val insert: Update0 = sql"insert into movie (title, director, year) values (${movie.title}, ${movie.director}, ${movie.releaseDate.getValue})".update
+    override def addMovie(movie: Movie): F[RegisteredMovie] = {
+      val insert: ConnectionIO[RegisteredMovie] =
+        sql"""insert into movie (title, director, year)
+              values (${movie.title}, ${movie.director}, ${movie.releaseDate.getValue})"""
+          .update
+          .withUniqueGeneratedKeys[RegisteredMovie]("id", "title", "director", "year")
       // Gets translated to expr1.flatMap(_ => expr2)
-      logger.info(s"add movie $movie") *> insert.run.transact(transactor)
+      try {
+        logger.info(s"add movie $movie") *> insert.transact(transactor)
+      }
+      catch{
+        case _: Throwable => S.pure(RegisteredMovie(0, "", "", java.time.Year.of(0)))
+      }
     }
 
     override def getMovies: F[List[RegisteredMovie]] = {
@@ -33,7 +42,7 @@ object RepositoryImpl {
       val create: Update0 =
         sql"""
          CREATE TABLE movie ( id SERIAL, title VARCHAR NOT NULL,
-         director VARCHAR NOT NULL UNIQUE, year SMALLINT )
+         director VARCHAR NOT NULL, year SMALLINT )
         """.update
       create.run.transact(transactor)
     }

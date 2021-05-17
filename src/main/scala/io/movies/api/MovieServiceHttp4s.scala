@@ -34,10 +34,10 @@ class MovieServiceHttp4s[F[_]: Sync: MovieService]
       )
     }
     case request@POST -> root / CREATE => {
-      val temp: F[Int] = request.as[Movie].flatMap(movie => ms.addMovie(movie))
+      val temp: F[RegisteredMovie] = request.as[Movie].flatMap(movie => ms.addMovie(movie))
       temp.flatMap(res =>
-        if (res != 1) InternalServerError()
-        else Created()
+        if (res.id <= 0) InternalServerError("Movie could not be inserted")
+        else Created(res)
       )
     }
     case _ => NotImplemented("You dont know how to use this thing")

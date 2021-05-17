@@ -30,7 +30,8 @@ class MovieSpec extends UsePostgreSQL with Matchers
 
     "A movie" should "be added to the database" in {
       val repo = RepositoryImpl.doobie[IO](xa)
-      repo.addMovie(movie).unsafeRunSync() shouldEqual 1
+      val regMovie = repo.addMovie(movie).unsafeRunSync()
+      Movie(regMovie.title, regMovie.director, regMovie.releaseDate) shouldEqual(movie)
     }
 
     "Movie with id 1 in database" should "be equal to expected" in {
@@ -55,13 +56,16 @@ class MovieSpec extends UsePostgreSQL with Matchers
       val repo = RepositoryImpl.doobie[IO](xa)
 
       val movie2: Movie = Movie("title2", "director2", Year.of(1981))
-      repo.addMovie(movie2).unsafeRunSync() shouldEqual 1
+      val regMovie2 = repo.addMovie(movie2).unsafeRunSync()
+      Movie(regMovie2.title, regMovie2.director, regMovie2.releaseDate) shouldEqual(movie2)
 
       val movie3: Movie = Movie("title3", "director3", Year.of(1900))
-      repo.addMovie(movie3).unsafeRunSync() shouldEqual 1
+      val regMovie3 = repo.addMovie(movie3).unsafeRunSync()
+      Movie(regMovie3.title, regMovie3.director, regMovie3.releaseDate) shouldEqual(movie3)
 
       val movie4: Movie = Movie("title4", "director4", Year.of(1979))
-      repo.addMovie(movie4).unsafeRunSync() shouldEqual 1
+      val regMovie4 = repo.addMovie(movie4).unsafeRunSync()
+      Movie(regMovie4.title, regMovie4.director, regMovie4.releaseDate) shouldEqual(movie4)
 
       val expectedMovieList: List[Movie] = List(movie, movie2, movie3, movie4)
 
