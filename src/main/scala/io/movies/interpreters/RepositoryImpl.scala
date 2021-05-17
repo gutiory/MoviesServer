@@ -1,5 +1,6 @@
 package io.movies.interpreters
 
+import scala.util.{Failure, Success, Try}
 import cats.effect._
 import cats.implicits._
 import doobie._
@@ -8,6 +9,7 @@ import io.movies.algebras.Repository
 import io.movies.model.{Movie, RegisteredMovie}
 import org.typelevel.log4cats.SelfAwareStructuredLogger
 import io.movies.model.RegisteredMovie._
+import org.postgresql.util.PSQLException
 
 object RepositoryImpl {
 
@@ -19,13 +21,8 @@ object RepositoryImpl {
               values (${movie.title}, ${movie.director}, ${movie.releaseDate.getValue})"""
           .update
           .withUniqueGeneratedKeys[RegisteredMovie]("id", "title", "director", "year")
-      // Gets translated to expr1.flatMap(_ => expr2)
-      try {
+        // *> Gets translated to expr1.flatMap(_ => expr2)
         logger.info(s"add movie $movie") *> insert.transact(transactor)
-      }
-      catch{
-        case _: Throwable => S.pure(RegisteredMovie(0, "", "", java.time.Year.of(0)))
-      }
     }
 
     override def getMovies: F[List[RegisteredMovie]] = {
