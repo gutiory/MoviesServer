@@ -11,7 +11,6 @@ import org.http4s.circe._
 import io.circe.generic.auto._
 
 class MovieServiceHttp4s[F[_]: Sync: MovieService]
-  //(implicit monadThrow: MonadThrow[F])
     extends Http4sDsl[F] {
   val ms: MovieService[F] = implicitly[MovieService[F]]
   implicit val decoder: EntityDecoder[F, Movie] = jsonOf[F, Movie]
