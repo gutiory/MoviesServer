@@ -6,6 +6,7 @@ import doobie._
 import doobie.implicits._
 import io.movies.algebras.Repository
 import io.movies.model.{Movie, RegisteredMovie}
+import io.movies.model.RegisteredMovie._
 import org.typelevel.log4cats.SelfAwareStructuredLogger
 
 object RepositoryImpl {

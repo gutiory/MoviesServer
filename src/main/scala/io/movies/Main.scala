@@ -10,11 +10,19 @@ import io.movies.algebras.Repository
 import io.movies.interpreters.RepositoryImpl
 import io.movies.api.MovieServiceHttp4s
 import io.movies.config.Configuration
+import pureconfig._
+import pureconfig.generic.auto._
 
 object Main extends IOApp {
-  override def run(args: List[String]): IO[ExitCode] = {
-    Configuration.loadConfiguration[IO].flatMap { config =>
 
+  def withConfig[C: ConfigReader](program: C => IO[ExitCode]): IO[ExitCode] =
+    ConfigSource.default.load[C].fold(
+      error => IO.delay(println(error.prettyPrint())).as(ExitCode.Error),
+      config => program(config)
+    )
+
+  override def run(args: List[String]): IO[ExitCode] = {
+    withConfig[Configuration] { config =>
       val transactor: Resource[IO, HikariTransactor[IO]] =
         for {
           ce <- ExecutionContexts.fixedThreadPool[IO](32) // our connect EC
