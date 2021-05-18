@@ -14,8 +14,3 @@ case class Configuration(
     dockerImage: String,
     driverClassName: String
   )
-
-object Configuration {
-  def loadConfiguration[F[_]: Sync]: F[Configuration] = Sync[F].delay(ConfigSource.default.loadOrThrow[Configuration])
-}
-

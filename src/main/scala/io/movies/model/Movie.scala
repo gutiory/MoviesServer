@@ -1,6 +1,6 @@
 package io.movies.model
 
-import doobie.{Get, Put, Read, Write}
+import doobie.{Get, Put}
 
 import java.time.Year
 
