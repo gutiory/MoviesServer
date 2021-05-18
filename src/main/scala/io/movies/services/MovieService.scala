@@ -7,8 +7,6 @@ trait MovieService[F[_]]{
   def getMovieById(id: Short): F[Option[RegisteredMovie]]
   def getMovies: F[List[RegisteredMovie]]
   def addMovie(movie: Movie): F[RegisteredMovie]
-  def createMovieTable: F[Int]
-  def dropMovieTable: F[Int]
 }
 
 object MovieService {
@@ -24,14 +22,6 @@ object MovieService {
 
       override def addMovie(movie: Movie): F[RegisteredMovie] = {
         repository.addMovie(movie)
-      }
-
-      override def createMovieTable: F[Int] = {
-        repository.createMovieTable
-      }
-
-      override def dropMovieTable: F[Int] = {
-        repository.dropMovieTable
       }
     }
 }
