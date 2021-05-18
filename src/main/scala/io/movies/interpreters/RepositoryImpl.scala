@@ -1,6 +1,5 @@
 package io.movies.interpreters
 
-import scala.util.{Failure, Success, Try}
 import cats.effect._
 import cats.implicits._
 import doobie._
@@ -8,8 +7,6 @@ import doobie.implicits._
 import io.movies.algebras.Repository
 import io.movies.model.{Movie, RegisteredMovie}
 import org.typelevel.log4cats.SelfAwareStructuredLogger
-import io.movies.model.RegisteredMovie._
-import org.postgresql.util.PSQLException
 
 object RepositoryImpl {
 
