@@ -21,16 +21,16 @@ class MovieServiceHttp4s[F[_]: Sync: MovieService]
   lazy val root = Root / MOVIE_SERVICE
 
   val service: HttpRoutes[F] = HttpRoutes.of[F] {
-    case GET -> _ / "movie" / id => {
+    case GET -> root / "movie" / id => {
       ms.getMovieById(id.toShort).flatMap(_.fold(NotFound(s"No movie found with ID $id"))(Ok(_)))
     }
-    case GET -> _ / "movies" => {
+    case GET -> root / "movies" => {
       ms.getMovies.flatMap(list =>
         if(list.nonEmpty) Ok(list)
         else NotFound("There are no Movies in the Data Base")
       )
     }
-    case request@POST -> _ / "movie" => {
+    case request@POST -> root / "movie" => {
       (for{
         movie <- request.as[Movie]
         rm <- ms.addMovie(movie)
