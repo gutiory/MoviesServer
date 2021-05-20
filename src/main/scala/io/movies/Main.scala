@@ -16,21 +16,34 @@ import pureconfig.generic.auto._
 object Main extends IOApp {
 
   def withConfig[C: ConfigReader](program: C => IO[ExitCode]): IO[ExitCode] =
-    ConfigSource.default.load[C].fold(
-      error => IO.delay(println(error.prettyPrint())).as(ExitCode.Error),
-      config => program(config)
-    )
+    ConfigSource.default
+      .load[C]
+      .fold(
+        error => IO.delay(println(error.prettyPrint())).as(ExitCode.Error),
+        config => program(config)
+      )
+
+  def withConfig[C: ConfigReader](
+      namespace: String
+  )(program: C => IO[ExitCode]): IO[ExitCode] =
+    ConfigSource.default
+      .at(namespace)
+      .load[C]
+      .fold(
+        error => IO.delay(println(error.prettyPrint())).as(ExitCode.Error),
+        config => program(config)
+      )
 
   override def run(args: List[String]): IO[ExitCode] = {
-    withConfig[Configuration] { config =>
+    withConfig[Configuration]("db") { config =>
       val transactor: Resource[IO, HikariTransactor[IO]] =
         for {
           ce <- ExecutionContexts.fixedThreadPool[IO](32) // our connect EC
           be <- Blocker[IO] // our blocking EC
           xa <- HikariTransactor.newHikariTransactor[IO](
-            config.driverClassName,
-            config.url+config.database,
-            config.username,
+            config.driver,
+            config.url,
+            config.user,
             config.password,
             ce, // await connection here
             be // execute JDBC operations here
