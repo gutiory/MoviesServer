@@ -1,12 +1,12 @@
 package config
 
-import cats.effect.IO
+import cats.syntax.option._
+
 import io.movies.config.Configuration
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import pureconfig.ConfigSource
 import pureconfig.generic.auto._
-import cats.syntax.option._
 
 class ConfigSpec extends AnyFlatSpec with Matchers {
   "Configuration file" should "load" in {

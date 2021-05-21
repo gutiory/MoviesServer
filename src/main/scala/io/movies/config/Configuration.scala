@@ -1,9 +1,5 @@
 package io.movies.config
 
-import cats.effect.Sync
-import pureconfig._
-import pureconfig.generic.auto._
-
 case class Port(number: Int) extends AnyVal
 
 case class Configuration(
@@ -13,4 +9,4 @@ case class Configuration(
     database: String,
     dockerImage: String,
     driverClassName: String
-  )
+)

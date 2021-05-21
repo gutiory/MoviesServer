@@ -1,12 +1,15 @@
 package movies
 
+import java.time.Year
+
 import cats.effect.IO
-import org.scalatest.matchers.should.Matchers
+
 import io.movies.interpreters.RepositoryImpl
-import io.movies.model.{Movie, RegisteredMovie}
+import io.movies.model.Movie
+import io.movies.model.RegisteredMovie
+import org.scalatest.matchers.should.Matchers
 import org.typelevel.log4cats.SelfAwareStructuredLogger
 import org.typelevel.log4cats.slf4j.Slf4jLogger
-import java.time.Year
 
 class MovieSpec extends UsePostgreSQL with Matchers
 {
