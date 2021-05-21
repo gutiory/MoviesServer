@@ -7,3 +7,5 @@ target/
 .bloop
 project/metals*
 project/project/
+src/project/
+src/test/project/
