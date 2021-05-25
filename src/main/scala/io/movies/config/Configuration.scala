@@ -4,9 +4,8 @@ case class Port(number: Int) extends AnyVal
 
 case class Configuration(
     url: String,
-    username: String,
+    user: String,
     password: String,
-    database: String,
     dockerImage: String,
-    driverClassName: String
+    driver: String
 )
