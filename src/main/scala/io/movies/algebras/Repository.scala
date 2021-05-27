@@ -1,6 +1,7 @@
 package io.movies.algebras
 
-import io.movies.model.{Movie, RegisteredMovie}
+import io.movies.model.Movie
+import io.movies.model.RegisteredMovie
 
 trait Repository[F[_]] {
   def addMovie(movie: Movie): F[RegisteredMovie]
