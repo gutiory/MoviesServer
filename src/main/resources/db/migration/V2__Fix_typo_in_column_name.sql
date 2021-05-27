@@ -1,0 +1,1 @@
+ALTER TABLE movie RENAME COLUMN tittle TO title;

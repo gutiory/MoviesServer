@@ -1,4 +1,5 @@
 import Dependencies._
+import com.typesafe.config.ConfigFactory
 
 ThisBuild / scalaVersion := "2.13.5"
 ThisBuild / version := "0.1.0-SNAPSHOT"
@@ -39,14 +40,21 @@ lazy val root = (project in file("."))
 
 addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1")
 
+lazy val databaseConfig = settingKey[com.typesafe.config.Config](
+  "Typesafe config file with Flyway settings"
+)
+
+databaseConfig :=
+  ConfigFactory
+    .parseFile(
+      (Compile / resourceDirectory).value / "application.conf"
+    )
+    .resolve()
+
 enablePlugins(FlywayPlugin)
-flywayDriver := "org.postgresql.Driver"
-flywayUrl := "jdbc:postgresql://127.0.0.1:5432/MovieService"
-flywayUser := "postgres"
-flywayPassword := "somePassword"
-flywayLocations += "filesystem:src/main/resources/db/migration"
-flywaySchemas := Seq("schema1", "schema2", "schema3")
-/*flywayPlaceholders := Map(
-  "keyABC" -> "valueXYZ",
-  "otherplaceholder" -> "value123"
-)*/
+flywayDriver := databaseConfig.value.getString("db.driver")
+flywayUrl := databaseConfig.value.getString("db.url")
+flywayUser := databaseConfig.value.getString("db.user")
+flywayPassword := databaseConfig.value.getString("db.password")
+
+Compile / run := (Compile / run).dependsOn(flywayMigrate).evaluated

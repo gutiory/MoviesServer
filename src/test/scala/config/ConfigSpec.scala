@@ -10,15 +10,15 @@ import pureconfig.generic.auto._
 
 class ConfigSpec extends AnyFlatSpec with Matchers {
   "Configuration file" should "load" in {
-      val config = ConfigSource.default.load[Configuration].toOption
-      val expectedConfig = Configuration(
-      "jdbc:postgresql://127.0.0.1:5432/",
+    val config         = ConfigSource.default.at("db").load[Configuration].toOption
+    val expectedConfig = Configuration(
+      "jdbc:postgresql://127.0.0.1:5432/movieservice",
       "postgres",
       "somePassword",
-      "MovieService",
       "postgres",
-      "org.postgresql.Driver")
+      "org.postgresql.Driver"
+    )
 
-    config shouldEqual(expectedConfig.some)
+    config shouldEqual (expectedConfig.some)
   }
 }
